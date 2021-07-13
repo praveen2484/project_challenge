@@ -1,0 +1,45 @@
+
+create view challenge1 as 
+select year,month,airline,origin_airport,count(*) as total_flights 
+from flights
+group by 1,2,3,4
+;
+
+create view challenge2 as 
+select a.airline as airline, (ontime_count/total_count)*100 as ontime_percetage from
+(select airline, count(*) as total_count from flights
+           where year = 2015 
+           group by airline) a
+inner join 
+(select airline, count(*) as ontime_count from flights
+           where year = 2015 and arrival_delay <= 0
+           group by airline) b
+on a.airline = b.airline
+;
+
+create view challenge3 as 
+select airline,count(*) as delay_count from FLIGHTS
+where (departure_delay > 0) or (arrival_delay > 0)
+group by airline
+order by delay_count desc
+;
+
+create view challenge4 as
+select origin_airport,cancellation_reason from FLIGHTS
+where cancellation_reason is not null
+group by origin_airport,cancellation_reason
+order by origin_airport;
+
+create view  challenge6 as 
+select airline,origin_airport,destination_airport from flights where (origin_airport, destination_airport,1) in   (
+select origin_airport, destination_airport,count(*) as cnt
+from flights
+group by 1,2 having count(*)=1
+  )
+;
+
+
+
+
+
+
